@@ -1,65 +1,51 @@
 # Portfolio — Mohamed Riad Beaizia
 
-Site portfolio en **Next.js 16 + TypeScript**, exporté en statique (HTML) : il se déploie gratuitement sur Vercel ou GitHub Pages.
+Portfolio personnel d'un étudiant en Master 2 IWOCS (Ingénierie du Web, des Objets Communicants et des Systèmes complexes) à l'Université Le Havre Normandie, à la recherche d'un stage de fin d'études en développement full-stack ou en data.
 
-## Lancer en local
+🔗 **https://mohamedriadbeaizia.github.io**
 
-```bash
-npm install
-npm run dev        # → http://localhost:3000
-```
+## Stack
 
-## Modifier le contenu (pas besoin de toucher aux composants)
+- **Next.js 16** (App Router) et **React 19**
+- **TypeScript** en mode strict
+- **CSS** sans framework, avec des variables pour le thème
+- Polices auto-hébergées (Fontsource)
+- Export statique, déployé sur **GitHub Pages** via **GitHub Actions**
 
-| Quoi | Où |
-|---|---|
-| Infos perso, liens, compétences, parcours | `src/data/site.ts` |
-| Projets (cartes + pages `/projets/...`) | `src/data/projects.ts` |
-| Couleurs, polices, espacements | variables en haut de `src/app/globals.css` |
-| Texte « À propos » | `src/components/About.tsx` |
+## Fonctionnalités
 
-**Ajouter un projet** = ajouter un objet dans `projects.ts`. La carte sur l'accueil et la page du projet sont générées automatiquement. Un lien laissé vide (`""`) n'est pas affiché.
-
-## À faire avant la mise en ligne
-
-1. Mettre tes deux CV dans `public/` : `CV_Beaizia_FullStack.pdf` et `CV_Beaizia_Data.pdf`
-   (ou changer les noms dans `cv` de `site.ts`).
-2. Mettre ton URL GitHub dans `site.github` (`site.ts`).
-3. Remplir les liens `code` / `demo` des projets (`projects.ts`).
-
-## Mettre en ligne
-
-### Option A — Vercel (le plus simple)
-1. Pousse le projet sur un repo GitHub.
-2. Va sur vercel.com → *Add New Project* → importe le repo → *Deploy*. Rien à configurer.
-3. Chaque `git push` met le site à jour automatiquement.
-
-### Option B — GitHub Pages
-1. Pousse le projet sur GitHub (idéalement dans un repo nommé `TON-PSEUDO.github.io` pour avoir l'URL `https://TON-PSEUDO.github.io`).
-2. Dans le repo : **Settings → Pages → Source : GitHub Actions**.
-3. Le workflow `.github/workflows/deploy.yml` construit et publie le site à chaque push sur `main`.
-   Si ton repo a un autre nom (ex. `portfolio`), il gère tout seul le sous-dossier `/portfolio`.
-
-### Après la mise en ligne (optionnel)
-Ajoute la variable d'environnement `NEXT_PUBLIC_SITE_URL=https://ton-url` (Vercel → Settings → Environment Variables) pour des aperçus de liens LinkedIn parfaits.
-
-## Lien par profil
-
-Le sélecteur Tout / Full-stack / Data change les projets, les compétences mises en avant, le graphe et le CV téléchargé.
-Tu peux envoyer un lien direct dans tes candidatures :
-
-- `https://ton-site/?profil=data`
-- `https://ton-site/?profil=fullstack`
+- **Graphe de nœuds animé** en Canvas dans l'en-tête, en clin d'œil au thème « objets communicants » du master. L'animation se met en pause hors de l'écran et respecte la préférence « réduire les animations ».
+- **Sélecteur de profil** (Tout / Full-stack / Data) : il filtre les projets, met en avant les compétences correspondantes et adapte le CV proposé. Le profil peut être passé dans l'URL (`?profil=data`).
+- **Une page par projet**, générée statiquement à partir d'un fichier de données unique : contexte, réalisations, défi technique, résultats et compétences.
+- **Accessibilité** : navigation au clavier, lien d'évitement, attributs ARIA.
+- **SEO** : métadonnées et Open Graph par page, données structurées schema.org.
+- **Responsive**, du mobile au grand écran.
 
 ## Structure
 
 ```
 src/
   app/
-    layout.tsx              ← en-tête, pied de page, SEO
-    page.tsx                ← page d'accueil
-    projets/[slug]/page.tsx ← page d'un projet
-    globals.css             ← tout le style
-  components/               ← Hero, NodeGraph (graphe animé), Skills, Projects…
-  data/                     ← ← ← ton contenu
+    layout.tsx              en-tête, pied de page, métadonnées
+    page.tsx                page d'accueil
+    projets/[slug]/page.tsx page de chaque projet (génération statique)
+    globals.css             styles et thème
+  components/               Hero, NodeGraph, Skills, Projects, Contact…
+  data/
+    site.ts                 informations, compétences, parcours
+    projects.ts             projets
 ```
+
+Le contenu est séparé de la présentation : ajouter un projet revient à ajouter un objet dans `projects.ts`.
+
+## Lancer en local
+
+```bash
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # export statique dans out/
+```
+
+## Déploiement
+
+Chaque push sur `main` déclenche le workflow `.github/workflows/deploy.yml`, qui construit le site et le publie sur GitHub Pages.
