@@ -11,6 +11,21 @@ import type { Profile } from "@/data/site";
    ================================================================== */
 
 const LABELS = ["Next.js", "React", "Python", "Données", "CUDA", "Réseaux", "SQL", "Agile"];
+
+// Satellites : les outils rattachés à chaque domaine.
+// Petits et pâles au repos, ils s'allument (avec leur nom) quand on survole leur domaine.
+const SATELLITES: Record<string, string[]> = {
+  "Next.js": ["Prisma", "Better Auth", "Docker"],
+  React: ["TypeScript", "Leaflet", "Chart.js"],
+  Python: ["pandas", "PuLP", "Jupyter"],
+  Données: ["TF-IDF", "Plotly", "Matplotlib"],
+  CUDA: ["C", "GPU"],
+  Réseaux: ["NetworkX", "Louvain", "PageRank"],
+  SQL: ["PostgreSQL", "MongoDB", "Oracle"],
+  Agile: ["Scrum", "GitLab"],
+};
+const SAT_DIST = 40; // distance satellite ↔ domaine (px)
+const SAT_SPREAD = 0.62; // écart angulaire entre satellites (radians)
 const HIGHLIGHT: Record<Profile, string[] | null> = {
   all: null,
   fullstack: ["Next.js", "React", "SQL", "Agile"],
@@ -59,6 +74,21 @@ export function NodeGraph({ profile, centerLabel }: { profile: Profile; centerLa
     const mouse = { x: -1, y: -1 };
     const isOn = (n: Node) => !highlightRef.current || highlightRef.current.includes(n.label);
 
+    // Position des satellites : en éventail vers l'extérieur du domaine.
+    // Pour les domaines à gauche/droite, l'éventail s'ouvre au-dessus et en dessous
+    // pour ne pas recouvrir le nom du domaine (écrit à l'horizontale).
+    function satellitesDe(n: Node) {
+      const noms = SATELLITES[n.label] ?? [];
+      const horizontal = Math.abs(Math.cos(n.ang)) > 0.9;
+      const decalages = horizontal
+        ? [-0.8, 0.8, -1.45, 1.45].slice(0, noms.length)
+        : noms.map((_, j) => (j - (noms.length - 1) / 2) * SAT_SPREAD);
+      return noms.map((label, j) => {
+        const ang = n.ang + decalages[j];
+        return { label, ang, x: n.x + Math.cos(ang) * SAT_DIST, y: n.y + Math.sin(ang) * SAT_DIST };
+      });
+    }
+
     function resize() {
       const rect = canvas!.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -71,13 +101,21 @@ export function NodeGraph({ profile, centerLabel }: { profile: Profile; centerLa
       const hl = highlightRef.current;
       ctx!.clearRect(0, 0, W, H);
       const cx = W / 2, cy = H / 2;
-      const k = Math.min(W, H) * 0.95;
+      const k = Math.min(W, H) * 0.82; // un peu resserré pour laisser la place aux satellites
       center.x = cx;
       center.y = cy + (reduce ? 0 : Math.sin(t * 0.4) * 4);
       nodes.forEach((n) => {
         const wob = reduce ? 0 : Math.sin(t * 0.6 + n.phase) * n.amp;
         n.x = cx + Math.cos(n.ang) * (n.rad + wob) * k;
         n.y = cy + Math.sin(n.ang) * (n.rad + wob) * k;
+      });
+
+      // Domaine survolé (le domaine lui-même ou l'un de ses satellites)
+      const sats = nodes.map((n) => satellitesDe(n));
+      let survole = -1;
+      nodes.forEach((n, i) => {
+        if (Math.hypot(mouse.x - n.x, mouse.y - n.y) < 26) survole = i;
+        else if (sats[i].some((s) => Math.hypot(mouse.x - s.x, mouse.y - s.y) < 12)) survole = i;
       });
 
       // anneau
@@ -112,12 +150,44 @@ export function NodeGraph({ profile, centerLabel }: { profile: Profile; centerLa
         pulses = pulses.filter((pl) => pl.p < 1);
       }
 
+      // satellites (sous les nœuds principaux)
+      ctx!.textBaseline = "middle";
+      nodes.forEach((n, i) => {
+        const on = isOn(n);
+        const actif = i === survole;
+        sats[i].forEach((s) => {
+          ctx!.strokeStyle = actif ? "rgba(37,64,255,0.55)" : on ? "rgba(37,64,255,0.14)" : "rgba(37,64,255,0.05)";
+          ctx!.lineWidth = actif ? 1.3 : 1;
+          ctx!.beginPath(); ctx!.moveTo(n.x, n.y); ctx!.lineTo(s.x, s.y); ctx!.stroke();
+
+          ctx!.fillStyle = actif ? C.signal : "#fff";
+          ctx!.strokeStyle = actif ? C.signal : on ? C.signalLt : C.faded;
+          ctx!.globalAlpha = actif ? 1 : on ? 0.7 : 0.45;
+          ctx!.lineWidth = 1.2;
+          ctx!.beginPath(); ctx!.arc(s.x, s.y, actif ? 3.4 : 2.6, 0, Math.PI * 2); ctx!.fill(); ctx!.stroke();
+          ctx!.globalAlpha = 1;
+
+          if (actif) {
+            ctx!.font = "10.5px 'Space Mono', monospace";
+            ctx!.fillStyle = C.signal;
+            const dx = Math.cos(s.ang), dy = Math.sin(s.ang);
+            if (Math.abs(dx) < 0.35) {
+              ctx!.textAlign = "center";
+              ctx!.fillText(s.label, s.x, s.y + (dy < 0 ? -11 : 11));
+            } else {
+              ctx!.textAlign = dx > 0 ? "left" : "right";
+              ctx!.fillText(s.label, s.x + (dx > 0 ? 7 : -7), s.y);
+            }
+          }
+        });
+      });
+
       // nœuds
       ctx!.font = "12px 'Space Mono', monospace";
       ctx!.textBaseline = "middle";
-      nodes.forEach((n) => {
+      nodes.forEach((n, i) => {
         const on = isOn(n);
-        const hov = Math.hypot(mouse.x - n.x, mouse.y - n.y) < 26;
+        const hov = i === survole;
         const lit = hov || (on && !!hl);
         ctx!.fillStyle = lit ? C.signal : "#fff";
         ctx!.strokeStyle = on ? (hov ? C.signal : C.signalLt) : C.faded;
