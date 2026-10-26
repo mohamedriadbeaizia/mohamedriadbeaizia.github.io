@@ -1,13 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { Profile } from "@/data/site";
 
 /* ==================================================================
    GRAPHE INTERACTIF — la signature du site.
    Nœud central = toi ; nœuds autour = tes domaines.
    Des "signaux" circulent le long des arêtes (objets communicants).
-   Les nœuds du profil choisi s'allument.
    ================================================================== */
 
 const LABELS = ["Next.js", "React", "Python", "Données", "CUDA", "Réseaux", "SQL", "Agile"];
@@ -26,11 +24,6 @@ const SATELLITES: Record<string, string[]> = {
 };
 const SAT_DIST = 40; // distance satellite ↔ domaine (px)
 const SAT_SPREAD = 0.62; // écart angulaire entre satellites (radians)
-const HIGHLIGHT: Record<Profile, string[] | null> = {
-  all: null,
-  fullstack: ["Next.js", "React", "SQL", "Agile"],
-  data: ["Python", "Données", "CUDA", "Réseaux"],
-};
 const C = {
   signal: "#2540FF",
   signalLt: "#6B7BFF",
@@ -42,16 +35,10 @@ const C = {
 
 type Node = { label: string; ang: number; rad: number; x: number; y: number; r: number; phase: number; amp: number };
 
-export function NodeGraph({ profile, centerLabel }: { profile: Profile; centerLabel: string }) {
+export function NodeGraph({ centerLabel }: { centerLabel: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const highlightRef = useRef<string[] | null>(HIGHLIGHT[profile]);
-  const redrawRef = useRef<() => void>(() => {});
-
-  // Changement de profil : on met à jour sans relancer l'animation
-  useEffect(() => {
-    highlightRef.current = HIGHLIGHT[profile];
-    redrawRef.current();
-  }, [profile]);
+  // Domaines mis en avant (aucun = tous allumés de la même façon)
+  const highlightRef = useRef<string[] | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -213,7 +200,6 @@ export function NodeGraph({ profile, centerLabel }: { profile: Profile; centerLa
       frame();
       if (!reduce && visible) raf = requestAnimationFrame(loop);
     }
-    redrawRef.current = () => { if (reduce) frame(); };
 
     // Pause quand le graphe sort de l'écran (CPU / batterie)
     const io = new IntersectionObserver(([e]) => {

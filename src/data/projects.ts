@@ -1,7 +1,7 @@
 import type { Track } from "./site";
 
 /* ==================================================================
-   👉 TES PROJETS — ajouter un projet = ajouter un objet ici.
+   Projets — ajouter un projet = ajouter un objet ici.
    La carte sur l'accueil ET la page /projets/<slug> sont générées
    automatiquement. Un lien vide ("") n'est pas affiché.
    ================================================================== */

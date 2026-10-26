@@ -32,11 +32,8 @@ export function Contact() {
             <a href={`mailto:${site.email}?subject=${encodeURIComponent("Stage de fin d'études")}`} className="btn">
               M&apos;écrire un email
             </a>
-            <a href={asset(cv.fullstack)} className="btn btn-ghost" download>
-              CV Full-stack
-            </a>
-            <a href={asset(cv.data)} className="btn btn-ghost" download>
-              CV Data
+            <a href={asset(cv)} className="btn btn-ghost" download>
+              Télécharger mon CV
             </a>
           </div>
           <div className="socials">

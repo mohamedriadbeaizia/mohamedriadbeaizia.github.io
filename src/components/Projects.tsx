@@ -1,9 +1,6 @@
-"use client";
-
 import Link from "next/link";
 import { projects, type Project } from "@/data/projects";
 import { asset } from "@/lib/asset";
-import { useProfile } from "./ProfileProvider";
 import { ProjectLinks } from "./ProjectLinks";
 import { Reveal } from "./Reveal";
 
@@ -43,23 +40,16 @@ function ProjectCard({ p }: { p: Project }) {
 }
 
 export function Projects() {
-  const { profile } = useProfile();
-  const shown = profile === "all" ? projects : projects.filter((p) => p.tracks.includes(profile));
-  const suffix = profile === "all" ? "" : ` · ${profile === "data" ? "data" : "full-stack"}`;
-
   return (
     <Reveal id="projets">
       <div className="wrap">
         <span className="eyebrow">projets</span>
         <div className="projects-head">
           <h2 className="section-title">Mes réalisations.</h2>
-          <span className="projects-count" aria-live="polite">
-            {shown.length} projet{shown.length > 1 ? "s" : ""}
-            {suffix}
-          </span>
+          <span className="projects-count">{projects.length} projets</span>
         </div>
         <div className="projects">
-          {shown.map((p) => (
+          {projects.map((p) => (
             <ProjectCard key={p.slug} p={p} />
           ))}
         </div>

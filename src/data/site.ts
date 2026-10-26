@@ -1,5 +1,5 @@
 /* ==================================================================
-   👉 TES INFOS PERSO — tout le texte "fixe" du site est ici.
+   Informations personnelles et contenu fixe du site.
    ================================================================== */
 
 export const site = {
@@ -9,24 +9,20 @@ export const site = {
   phone: "+33629922624",
   phoneLabel: "06 29 92 26 24",
   linkedin: "https://www.linkedin.com/in/mohamed-riad-beaizia",
-  github: "", // 👉 À FAIRE : ton URL GitHub (masqué tant que vide)
+  github: "https://github.com/mohamedriadbeaizia",
 
   status: "Stage de fin d'études · dès le 22 février 2027",
   description:
-    "Étudiant en Master 2 IWOCS au Havre, à la recherche d'un stage de fin d'études de 4 à 6 mois en développement full-stack ou en data, à partir du 22 février 2027.",
+    "Étudiant en Master 2 IWOCS au Havre, à la recherche d'un stage de fin d'études de 4 à 6 mois en développement logiciel, du web à la donnée, à partir du 22 février 2027.",
 };
 
-/** Tes deux CV : mets les PDF dans le dossier /public */
-export const cv = {
-  fullstack: "/CV_Stage_FullStack_Mohamed_Riad_BEAIZIA.pdf",
-  data: "/CV_Stage_Data_Mohamed_Riad_BEAIZIA.pdf",
-};
+/** CV téléchargeable (fichier dans /public) */
+export const cv = "/CV_Stage_Mohamed_Riad_BEAIZIA.pdf";
 
 export type Track = "fullstack" | "data";
-export type Profile = "all" | Track;
 
 /* ------------------------------------------------------------------
-   Compétences — `tracks` = profils pour lesquels la compétence s'allume
+   Compétences — `tracks` : domaine(s) de chaque compétence (indicatif)
    ------------------------------------------------------------------ */
 type Skill = { name: string; tracks?: Track[] };
 const F: Track[] = ["fullstack"];
@@ -157,7 +153,6 @@ export const experience: TimelineItem[] = [
   },
 ];
 
-// 👉 À COMPLÉTER : remplace "EUNICoast · Italie" / "Bénévolat" par des dates si tu veux
 export const engagement: TimelineItem[] = [
 
   {

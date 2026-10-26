@@ -15,14 +15,13 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { site } from "@/data/site";
 
-// 👉 Une fois en ligne, mets l'URL de ton site dans NEXT_PUBLIC_SITE_URL
-//    (ou directement ici) pour des aperçus de liens parfaits.
+// URL publique du site (optionnelle) : améliore les aperçus de liens.
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
 export const metadata: Metadata = {
   ...(siteUrl ? { metadataBase: new URL(siteUrl) } : {}),
   title: {
-    default: `${site.name} — Stage de fin d'études · Full-stack & Data`,
+    default: `${site.name} — Portfolio · Stage de fin d'études`,
     template: `%s — ${site.name}`,
   },
   description: site.description,
@@ -30,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "profile",
     locale: "fr_FR",
-    title: `${site.name} — Stage de fin d'études Full-stack & Data`,
+    title: `${site.name} — Portfolio · Stage de fin d'études`,
     description: "Master 2 IWOCS · Le Havre. Disponible dès le 22 février 2027 pour un stage de 4 à 6 mois.",
   },
 };
@@ -41,7 +40,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: site.name,
-  jobTitle: "Étudiant en Master 2 IWOCS — recherche de stage full-stack / data",
+  jobTitle: "Étudiant en Master 2 IWOCS — recherche de stage de fin d'études",
   alumniOf: { "@type": "CollegeOrUniversity", name: "Université Le Havre Normandie" },
   address: { "@type": "PostalAddress", addressLocality: "Le Havre", addressCountry: "FR" },
   email: `mailto:${site.email}`,
