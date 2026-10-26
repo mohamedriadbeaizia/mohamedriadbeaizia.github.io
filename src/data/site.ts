@@ -18,8 +18,8 @@ export const site = {
 
 /** Tes deux CV : mets les PDF dans le dossier /public */
 export const cv = {
-  fullstack: "/CV_Beaizia_FullStack.pdf",
-  data: "/CV_Beaizia_Data.pdf",
+  fullstack: "/CV_Stage_FullStack_Mohamed_Riad_BEAIZIA.pdf",
+  data: "/CV_Stage_Data_Mohamed_Riad_BEAIZIA.pdf",
 };
 
 export type Track = "fullstack" | "data";

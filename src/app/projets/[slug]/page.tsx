@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProjectLinks } from "@/components/ProjectLinks";
 import { getProject, projects } from "@/data/projects";
+import { asset } from "@/lib/asset";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -62,6 +63,19 @@ export default async function ProjectPage({ params }: Props) {
             )}
           </dl>
         </header>
+
+        {p.image && (
+          <figure className="case-shot">
+            <div className="case-shot-bar" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+              {p.links.demo && <em>{p.links.demo.replace(/^https?:\/\//, "").replace(/\/$/, "")}</em>}
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={asset(p.image)} alt={`Capture d'écran — ${p.title}`} />
+          </figure>
+        )}
 
         {p.result && (
           <div className="case-result">

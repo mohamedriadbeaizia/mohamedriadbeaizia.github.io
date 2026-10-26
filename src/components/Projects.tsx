@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { projects, type Project } from "@/data/projects";
+import { asset } from "@/lib/asset";
 import { useProfile } from "./ProfileProvider";
 import { ProjectLinks } from "./ProjectLinks";
 import { Reveal } from "./Reveal";
@@ -9,10 +10,14 @@ import { Reveal } from "./Reveal";
 function ProjectCard({ p }: { p: Project }) {
   return (
     <article className={`project${p.featured ? " featured" : ""}`}>
-      <div className="thumb">
+      <Link href={`/projets/${p.slug}/`} className={`thumb${p.image ? " has-image" : ""}`} tabIndex={-1} aria-hidden="true">
+        {p.image && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={asset(p.image)} alt="" loading="lazy" />
+        )}
         {p.badge && <span className="badge">{p.badge}</span>}
         <span className="thumb-label">{p.label}</span>
-      </div>
+      </Link>
       <div className="project-body">
         <h3>
           <Link href={`/projets/${p.slug}/`}>{p.title}</Link>

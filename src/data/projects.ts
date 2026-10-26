@@ -23,6 +23,7 @@ export type Project = {
   skills: string[]; // page projet : "Compétences démontrées"
   stack: string[];
   links: { code?: string; demo?: string };
+  image?: string; // capture d'écran dans /public (ex. "/projets/mon-projet.webp")
 };
 
 export const projects: Project[] = [
@@ -68,6 +69,7 @@ export const projects: Project[] = [
     ],
     stack: ["Next.js", "React", "TypeScript", "Prisma", "PostgreSQL", "Better Auth", "Zod", "Vitest", "Docker"],
     links: { code: "https://github.com/mohamedriadbeaizia/annonces-immobilieres", demo: "https://annonces-immobilieres-yxih.vercel.app/annonces" },
+    image: "/projets/plateforme-annonces-immobilieres.webp",
   },
 
   /* ---------------------------------------------------------------- */
@@ -144,6 +146,7 @@ export const projects: Project[] = [
     ],
     stack: ["JavaScript", "Leaflet", "Chart.js", "Canvas", "Tailwind CSS"],
     links: { code: "https://github.com/mohamedriadbeaizia/ecocoast-simulato", demo: "https://mohamedriadbeaizia.github.io/ecocoast-simulato/" },
+    image: "/projets/ecocoast-simulator.webp",
   },
 
   /* ---------------------------------------------------------------- */
